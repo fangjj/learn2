@@ -1,0 +1,357 @@
+1. 创建git仓库
+pwd #查看在哪个目录
+git init #git本地仓库初始化
+操作：新建readme.txt 输入内容xxx
+git add readme.txt #向git仓库添加文件
+git commit -m "worte readme.txt" #向git仓库提交文件
+
+
+2. 查看状态
+git status #查看仓库状态 on branch master. nothing to commit, working directory clean.
+操作：修改readme.txt内容xxxx 
+git status #查看仓库状态 on branch master. changes not staged for commit:(use "git add <file>" to update what will be committed).(use "git checkout --<file>" to discard changes in working directory). modified: readme.txt. no changes added to commit (use "git add" and/or "git commit -a").
+
+git diff readme.txt #查看文件修改具体内容
+git add readme.text #向git仓库提交修改后的文件
+git status #查看当前仓库状态 on branch master. changes to be committed: (use "git reset HEAD <file>" to unstage) modified: readme.txt
+
+
+3. 回退版本
+操作：修改readme.txt内容xxxxx
+git add readme.txt #向git仓库添加修改后的文件
+git commit -m "append GPL" #向git仓库提交修改后的文件
+git log #查看git提交记录(3条)
+git log --pretty=oneline #格式化查看git提交记录
+git reset --hard HEAD^ #把当前git仓库版本回退到上一个版本
+git log #查看git提交记录(2条)
+git reflog #查看git操作记录和提交号,找到append GPL 那次提交号f7a922a
+git reset --hard f7a922a #重新回到append GPL 版本
+git log #查看git 提交记录(3条)
+
+
+
+4. 工作区和暂存区和分支
+工作区：working directory 就是电脑能看到的目录
+暂存区：stage
+git add #将工作区文件修改添加到暂存区
+git commit #将暂存区内容提交到当前分支
+
+操作：修改readme.txt 内容xxxxxx,新增一个文件LICENSE.txt
+git status #查看仓库状态 on branch master. changes not staged for commit:(use "git add <file>" to update what will be commited).(use "git checkout --<file>" to discard changes in working directory). modified: readme.txt. untracked files:(use "git add <file>" to include in what will be committed). license.txt. no changes added to commit (use "git add" and/or "git commit -a").
+
+git add LICENSE.txt #向git仓库添加新的文件，把新文件提交到暂存区
+git status #查看仓库状态 on branch master. changes to be commited:(use "git reset HEAD <file>" to unstage). new file: LICENSE.txt. changes not staged for commit:(use "git add <file>" to update what will be commited). (use "git checkout -- <file>" to discard changes in working directory). modified : readme.txt
+
+git add readme.txt #向git仓库提交修改后的文件,把修改过的文件提交到暂存区
+git statu #查看仓库状态 on branch master. changes to be commited. (use "git reset HEAD <file>" to unstage). new file: LICENSE.txt. modified: readm.text
+
+git commit -m "understand stage works" #向git仓库提交文件,把暂存区内容提交当前分支
+git status #查看仓库状态，on branch master. nothing to commit, working directory clean. (描述暂存区(绿色)和工作区(红色))
+
+
+
+5. 管理修改
+操作：修改readme.txt 内容xxxxxxx
+git add readme.txt #把修改过的文件提交到暂存区
+git status #查看仓库状态 on branch master. changes to be commited. (use "git reset HEAD <file>" to unstage) modified: readme.txt.
+操作：再次更改readm.txt 内容xxxxxxxx
+git commit -m "git tracks changes" #把暂存区内容提交当前分支
+git status #查看仓库状态 on branch master. changes not staged for commit: (use "git add <file>" to update what will be commited).(use "git checkout -- <file>" to discard changes in working directory) modified: readme.txt
+第一次修改 -> git add -> 第二次修改 -> git commit
+git commit只负责把暂存区的修改提交了，也就是第一次的修改被提交了，第二次的修改不会被提交。
+
+git diff #查看工作区文件和暂存区文件差别
+git add #把第二次修改添加到暂存区
+git commit -m "git tracks changes too" #把暂存区内容提交到当前分支
+操作：修改readme.txt 内容xxxxxx
+git diff #查看工作区文件和暂存区文件差别
+git diff HEAD -- readme.txt #查看工作区和版本库里面最新版本区别
+
+6. 撤销修改
+git checkout -- readme.txt #丢弃工作区对readme.txt 所做的修改。如果readme.txt 自从修改后没有添加到用暂存区，则用版本库中最新readme.txt 覆盖到工作区的readme.txt；如果readme.txt 修改后已经提交到暂存区，但未把暂存区内容提交到当前分支，则用暂存区的readme.txt内容覆盖工作区的readme.txt
+
+git reset HEAD readme.txt #把添加到暂存区的修改内容撤回到工作区，unstaged changes after reset: M readme.txt
+git status #查看仓库状态 on branch master. changes not staged for commit:(use "git add <file>" to update what will be commited).(use "git checkout -- <file>" to discard changes in working directory). modified: readme.txt
+git checkout -- readme.txt #丢弃工作区对readme.txt 修改，这的就完成撤销已经添加到暂存区的修改了。
+
+如何撤销提交了版本库的修改呢？
+可以利用版本回退把仓库恢复到上个版本，但是仅你没有把本地仓库推送到远程仓库上。如果推送到远程仓库，那就没有救了。
+
+
+7. 删除文件
+操作：新建一个文件test.txt
+git add test.txt #添加一个新文件test.txt 到暂存区
+git commit -m "test.txt" #把暂存区的新文件test.txt 提交到当前分支
+
+操作：在工作区删除文件test.txt
+git status #查看仓库状态 on branch master. changes not staged for commit: (use "git add/rm <file>" to udpate what will be  committed). (use "git checkout -- <file>" to discard changes in working directory). deleted: test.txt
+
+git checkout -- test.txt #误删除文件test.txt，用版本库文件覆盖到工作区的文件test.txt
+
+git rm test.txt #通知暂存区删除文件test.txt
+git status #查看仓库状态 on branch master. changes to be commited: (use "git reset HEAD <file>" to unstage)
+git commit -m "delete test.txt" #把暂存区通知提交到当前分支，这样文件就从版本库删除了
+
+如何找回提交到版本库中文件?如果一个文件被提交到版本库，那么你永远不用担心误删，但你只能恢复到文件最新版本
+
+
+8. 远程仓库
+
+
+9. 添加远程仓库
+git remote add origin https://github.com/fangjj/learn2.git #把一个存在的本地仓库推送到GitHub仓库上
+git push -u origin master #第一次把本地仓库内容推送到远程仓库上 -u 参数是把本地master分支和远程的master分支关联起来，在以后推送和拉取时候可以简化命令
+git push oirgin master #后面(非第一次)推送到远程仓库
+
+
+10. 克隆远程仓库到本地
+git clone https:// git@github.com/ #克隆远程仓库到本地,支持https和git协议
+
+
+
+11. 分支管理
+分支在实际中有什么用呢？假设你准备开发一个新功能，但是需要两周才能完成，第一周你写了50%的代码，如果立刻提交，由于代码还没写完，不完整的代码库会导致别人不能干活了。如果等代码全部写完再一次提交，又存在丢失每天进度的巨大风险。
+利用了分支，就不用怕了。你创建了一个属于你自己的分支，别人看不到，还继续在原来的分支上正常工作，而你在自己的分支上干活，想提交就提交，直到开发完毕后，再一次性合并到原来的分支上，这样，既安全，又不影响别人工作。
+
+
+12.创建、合并分支
+git checkout -b dev #创建一个新分支dev,并把当前分支切换到dev上
+
+git branch dev #创建一个新分支dev，不切换当前分支
+git checkout dev #手动切换当前分支到dev分支
+
+git branch #查看所有分支
+
+git branch -d test #删除test分支，确保当前分支不是在要删除test分支上
+
+操作：在dev分支上修改readme.txt 文件内容xxxxxxxx
+git add readme.txt #添加readme.txt 修改的内容到暂存区
+git commit -m "branch dev" #把暂存区的内容提交到当前分支(dev)
+
+git checkout master #把当前分支切换到master分支
+git merge dev #把dev分支合并到当前分支(master),把dev分支内容合并到master分支
+gti branch -d dev #合并完成后，删除dev分支
+
+git status #查看仓库状态 on branch master. your branch is ahead of "origin/master" by 1 commit. (use "git push" to publish your local commit). nothing to commit, working directory clean.
+git push origin master #将本地仓库推送到远程仓库master分支
+
+git status #查看仓库状态 on branch master. your branch is up-to-date with 'origin/master'. nothing to commit, working directory clean.
+
+创建分支dev，创建一个指针dev,指向当前分支指向相同提交
+切换分支dev，把HEAD指针指向dev
+每提交到分支dev一次，dev指针向前移动一步
+把dev分支合并到master上，把master指针指向dev的当前提交(快速合并)
+删除分支dev，删除指针dev
+
+
+13. 解决冲突
+git checkout -b feature1 #创建并切换分支feature1
+操作：修改readme.txt内容xxxxxxxxx
+git add readme.txt #把readme.txt 修改的内容添加到暂存区
+git commit -m "and simple" #把暂存区内容提交到当前分支(feature1)
+
+git checkout master #把当前分支切换到master分支上
+操作：修改readme.txt 内容xxxxxxxxxx
+git add readme.txt #把readme.txt 修改的内容到暂存区
+git commit -m "& simple" #把暂存区内容提交到当前分支(master)
+
+两个分支同时修改一个文件readme.txt的同一行内容，把feature1分支合并到master分支会引发冲突.
+git merge feature1 #把feature1分支合并到master分支（当前分支）
+auto-merging readme.txt. CONFLICT(content):Merge conflict in readme.txt. Automatic merge failed; fix conflicts and then commit the result.
+git status #查看仓库状态 on branch master. your branch is ahead of 'origin/master' by 1 commit. (use "git push" to publish your local commit). you have unmerged paths. (fix conflicts and run "git commit"). unmerged paths:(use "git add <file>" to mark resolution) both modified: readme.txt. no changes added to commit(use "git add" and/or "git commit -a")
+
+操作：收到修改readme.txt 内容,解决冲突
+git add readme.txt #把readme.txt 修改的内容到暂存区
+git commit -m "fix conflicts" #把暂存区内容提交到当前分支(master)
+
+git log --graph --pretty=oneline --abbrev-commit #查看git提交记录，用图形和缩写提交号
+
+git branch -d feature1 #合并后删除分支feature1
+
+
+14. 分支管理策略
+合并分支，如果可能，git会使用Fast forward模式(移动指针),但这种方式，删除分支后，会丢掉分支的信息
+如果强制禁用Fast forward模式，git 就会在merge时生成一个新的commit,这样，从分支历史上就可以看出分支信息
+合并分支时，加上--no-ff参数就可以用普通模式合并，合并后的历史有分支，能看出来曾经做过合并，而fast forward合并就看不出来曾经做过合并
+
+git checkout -b dev #创建并切换到dev分支
+操作：修改readme.txt 内容xxxxxxxxxxx
+git add readme.txt #把readme.txt 修改的内容到暂存区
+git commit -m "new branch dev" #把暂存区内容提交到当前分支(dev)
+
+git checkout master #把当前分支切换到master分支
+git merge --no-ff -m "merge with no-ff" dev #使用--no-ff 合并分支dev
+git log --graph --pretty=oneline --abbrev-commit #图形查看提交记录
+
+首先，master分支应该是非常稳定的，也就是仅用来发布新版本，平时不能在上面干活；
+那在哪干活呢？干活都在dev分支上，也就是说，dev分支是不稳定的，到某个时候，比如1.0版本发布时，再把dev分支合并到master上，在master分支发布1.0版本；
+你和你的小伙伴们每个人都在dev分支上干活，每个人都有自己的分支，时不时地往dev分支上合并就可以了。
+
+
+15. bug分支
+每个bug都可以通过一个新的临时分支来修复，修复后，合并分支，然后将临时分支删除。
+当你接到一个修复一个代号101的bug的任务时，很自然地，你想创建一个分支issue-101来修复它，但是，当前正在dev上进行的工作还没有提交：只进行到一半，预计完成还需1天时间,还没法提交。但是，必须在两个小时内修复该bug，怎么办？
+
+git checkout dev #把当前分支切换到dev分支上
+操作：修改readme.txt 内容xxxxxxxxxxxx
+通知：修复bug-101
+git stash #把当前工作现场“储藏”起来，等以后恢复现场后继续工作 saved working directory and index state WIP on dev: 4926ab7 new branch dev HEAD is now at 4926ab7 new branch dev.
+
+git checkout master #把当前分支切换到master分支
+git checkout -b bug-101 #创建并切换分支bug-101
+操作：修改readme.txt 内容xxxxxxxxxxx
+git add readme.txt #把readme.txt 修改的内容到暂存区
+git commit -m "fix bug-101" #把暂存区内容提交到当前分支(bug-101)
+
+git checkout master #把当前分支切换到master分支上
+git merge --no-ff -m "fix bug-101 by merge" bug-101 #把bug-101分支合并到master分支 
+git branch -d bug-101 #删除分支bug-101
+git log --graph -- pretty=oneline --abbrev-commit #查看图形化git提交记录
+
+git checkout dev #把当前分支切换到dev分支上
+git status #查看仓库状态 on branch dev. nothing to commit, working directory clean. 工作是干净的，刚才工作现场呢？
+git stash list #查看工作现场 stash@{0}: WIP on dev: 49625ab7 new branch dev
+
+git stash apply #恢复现场，但不删除现场
+git stash list #查看工作现场(恢复后还存在)
+git drop #删除工作现场
+git stash list #查看工作现场(已删除)
+
+git stash pop #恢复现场同时还删除现场
+git stash list #查看工作现场(已删除)
+
+git stash apply stash@{0} #恢复指定的现场
+
+
+16. Feature分支
+添加一个新功能时，你肯定不希望一些实验性质的代码，搞乱了主分支。所以，每添加一个新功能，最好新建一个feature分支，在上面开发，完成后，合并，最后，删除该feature分支。
+
+git checkout master #把当前分支切换到master分支上
+git checkout -b feature-test #创建并切换分支feature-test
+操作：新增文件feature.txt 
+git add feature.txt #把新文件feature.txt 添加到暂存区
+git commit -m "add feature.txt" #把暂存区内容提交到当前分支(feature-test)
+
+通知1：接到上级通知，因经某原因，新功能必须取消，分支feature-test并没有合并到master分支，删除分支feature-test
+git checkout master #把当前分支切换到master分支上
+git branch -d branch-test #删除feature-test分支
+error:the branch feature-test is not fully merged. If you are sure you want to delete, run "git brand -D feature-test"
+git branch -D feature-test #删除feature-test分支
+
+通知2：接到上级通知，因经某原因，新功能必须取消，也就是要从master分离出合并的新功能分支feature-test
+git checkout master #把当前分支切换到master分支上
+git merge --no-ff -m "merge from feature-test" feature-test #合并分支feature-test到master分支上
+git branch -d branch-test #删除feature-test分支
+git reset --hard HEAD^ #回到上一次提交
+
+
+17. 多人协作
+当你从远程仓库克隆时，实际上Git自动把本地的master分支和远程的master分支对应起来了，远程仓库的默认名称是origin。
+git remote #查看远程库的信息
+git remote -v #查看远程仓库地址和具体信息
+git push origin master #推送到远程仓库master分支
+git push origin dev #推送到远程仓库dev分支
+
+master分支是主分支，因此要时刻与远程同步；
+dev分支是开发分支，团队所有成员都需要在上面工作，所以也需要与远程同步；
+bug分支只用于在本地修复bug，就没必要推到远程了，除非老板要看看你每周到底修复了几个bug；
+feature分支是否推到远程，取决于你是否和你的小伙伴合作在上面开发。
+
+多人协作的工作模式通常是这样：
+首先，可以试图用git push origin branch-name推送自己的修改
+如果推送失败，则因为远程分支比你的本地更新，需要先用git pull试图合并；
+如果合并有冲突，则解决冲突，并在本地提交；
+没有冲突或者解决掉冲突后，再用git push origin branch-name推送就能成功！
+
+可能出现错误:
+推送失败，远程分支比你的本地更新。 failed to push some refs to "http://github.com/xxx.git". hint:updates were rejected because the tip of your current branch is behind. hint: its remote counterpart. merge the remote changes (eg: "git pull"). hint: before pushing agin.
+
+git pull失败了，没有指定本地dev分支与远程origin/dev分支的链接。There is no tracking information for the current branch. please specify which branch you want to merge with. if you wish to set tracking information for this branch you can do so with: git branch --set-upstream branch-name origin/branch-name
+git branch --set-upstream dev origin/dev #设置本地dev分支和远程origin/dev分支链接
+git pull #从远程仓库拉取最新内容
+
+
+18. 标签管理
+标签也是版本库的一个快照,tag就是一个让人容易记住的有意义的名字，它跟某个commit绑在一起。
+
+
+19. 创建标签（本地）
+git tag v1.0 #在当前分支上打上一个标签v1.0
+git tag #查询当前分支上的所有标签
+默认标签是打在最新提交的commit上的。
+
+现在是周五了，但应该在周一打的标签没有打，怎么办？
+git log --pretty=onlien --abbrev-commit #查看git提交记录
+git tag v0.5 50bea22 #对某一次提交打标签
+git tag #查询当前分支上的所有标签
+
+git tag -m -a "v0.1" "app v0.1 released"  #创建带有说明的标签，用-a指定标签名，-m指定说明文字
+git tag #查看所有标签
+
+
+20. 操作标签
+git tag -d v0.5 #删除指定名字的标签
+git tag #查看所有标签
+
+git push origin v1.0 #推送某个标签到远程仓库
+git push origin --tags #一次性推送本地所有标签到远程仓库
+
+git tag -d v1.0 #先删除本地标签v1.0
+git push origin :refs/tags/v1.0 #删除远程仓库标签v1.0
+
+
+21. 使用GitHub
+如何参与一个开源项目呢？
+1. "Fork"开源仓库
+2. "git clone" 开源仓库
+3. "pull request" 开源仓库
+
+
+22. 自定义git
+忽略特殊文件
+1. 忽略操作系统自动生成的文件，比如缩略图等；
+2. 忽略编译生成的中间文件、可执行文件等，也就是如果一个文件是通过另一个文件自动生成的，那自动生成的文件就没必要放进版本库，比如Java编译产生的.class文件；
+3. 忽略你自己的带有敏感信息的配置文件，比如存放口令的配置文件。
+
+编辑.gitignore文件
+https://github.com/github/gitignore #查找现成的
+
+提交.gitignore文件
+
+git add app.class #class文件已经被忽略
+the following paths are ingonred by one of your .gitignore files:
+app.class
+Use -f if you really want to add them.
+
+git check-ignore -v app.class #查看.gitignore文件哪行规则限制要提交的文件。.gitignore:1:*.class app.class
+
+git add -f app.class #强制添加被忽略的文件
+
+
+23. 配置操作的别名
+git config --global alias.unstage 'reset HEAD' #给git rest HEAD 起别名为unstage
+git unstage a.txt #相当于git reset HEAD a.txt
+
+git config --global alias.logone 'log --pretty=oneline --abbrev-commit' #给git log修饰起别名
+git logone #相当于git log --pretty=oneline --abbrev-commit
+
+git config --global alias.loggra 'log --graph --pretty=oneline --abbrev-commit'
+git loggra #相当于git log --graph --pretty=oneline --abbrev-commit
+
+git config --global alias.loglast 'log -1' #查看最后一条记录起别名git loglast
+git loglast #相当于 git log -1
+
+
+24.配置用户名和邮箱
+git config --global user.name "Your Name"
+git config --global user.email "your email"
+
+
+25. 查看全局配置
+git config -l #查看全局配置
+
+
+26.常见命令
+https://pan.baidu.com/s/1kU5OCOB?errno=0&errmsg=Auth%20Login%20Sucess&stoken=ace49239762790613040b50a249fc5e2cf8c0768063da1be1426cba33d26d568c3c7cb797c68a66edfd9166c58a6df3e557be9bef9028624575e85250659d1009fe3cbd1c022&bduss=f499b09563d44f4a1d501a4f6456a11ece605a9b6dafc488b4b71b4377a2beb2d7cf7b476bcdaa9a08c4a946b914fa70f10cd854e193d17b151dd8027d8bb69fcd4696127642faae857b163216fc0e9769cd5445caa1eda2153bd199ea0f4e2cee700c11a14970ac82f69fed741a724bd1cd6757b8d04c50f14be1b6ec0f594fdf4caea8641e2086fc4f725c90ccdc7aff04707bf700757ca570d7a29a5526a6d1743946cf854707b47468b10bd79937604d2ca1bedc826514557a18e69b5484564506d05beb&ssnerror=0#list/path=%2Fpub%2Fgit
+
+学习教程：http://www.liaoxuefeng.com/wiki/0013739516305929606dd18361248578c67b8067c8c017b000
